@@ -11,11 +11,28 @@ const ReportFound = () => {
         flocation: '',
         fdate: '',
         fdescription: '',
-        fcontact: ''
+        fcontact: '',
+        imageUrl: ''
     });
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            if (file.size > 100 * 1024) { // 100KB limit
+                alert('File size exceeds 100KB');
+                e.target.value = '';
+                return;
+            }
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFormData(prev => ({ ...prev, imageUrl: reader.result }));
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -29,7 +46,7 @@ const ReportFound = () => {
                 location: formData.flocation,
                 description: formData.fdescription,
                 contact: formData.fcontact || `Contact: ${formData.fname}`,
-                imageUrl: "/images/card.svg"
+                imageUrl: formData.imageUrl || "/images/card.svg"
             };
 
             await axios.post(`${API_URL}/items/found`, payload);
@@ -106,6 +123,8 @@ const ReportFound = () => {
                     <input
                         type="date"
                         id="fdate"
+                        min="2026-01-01"
+                        max="2030-12-31"
                         value={formData.fdate}
                         onChange={handleChange}
                         required
@@ -130,8 +149,8 @@ const ReportFound = () => {
                         required
                     />
 
-                    <label htmlFor="fphoto">Upload Photo (Optional):</label>
-                    <input type="file" id="fphoto" accept="image/*" />
+                    <label htmlFor="fphoto">Upload Photo (Optional, max 100KB):</label>
+                    <input type="file" id="fphoto" accept="image/*" onChange={handleFileChange} />
 
                     <div className="form-buttons-found">
                         <button type="submit">Submit</button>

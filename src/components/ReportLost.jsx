@@ -15,7 +15,8 @@ const ReportLost = () => {
         location: '',
         date: '',
         description: '',
-        contact: ''
+        contact: '',
+        imageUrl: ''
     });
 
     useEffect(() => {
@@ -32,6 +33,22 @@ const ReportLost = () => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
     };
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            if (file.size > 100 * 1024) { // 100KB limit
+                alert('File size exceeds 100KB');
+                e.target.value = '';
+                return;
+            }
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFormData(prev => ({ ...prev, imageUrl: reader.result }));
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -43,7 +60,7 @@ const ReportLost = () => {
                 location: formData.location,
                 description: formData.description,
                 contact: formData.contact || `Contact: ${formData.name}`,
-                imageUrl: "/images/card.svg"
+                imageUrl: formData.imageUrl || "/images/card.svg"
             };
 
             await axios.post(`${API_URL}/items/lost`, payload);
@@ -120,6 +137,8 @@ const ReportLost = () => {
                     <input
                         type="date"
                         id="date"
+                        min="2026-01-01"
+                        max="2030-12-31"
                         value={formData.date}
                         onChange={handleChange}
                         required
@@ -144,8 +163,8 @@ const ReportLost = () => {
                         required
                     />
 
-                    <label htmlFor="photo">Upload Photo (Optional):</label>
-                    <input type="file" id="photo" accept="image/*" />
+                    <label htmlFor="photo">Upload Photo (Optional, max 100KB):</label>
+                    <input type="file" id="photo" accept="image/*" onChange={handleFileChange} />
 
                     <div className="form-buttons">
                         <button type="submit">Submit</button>

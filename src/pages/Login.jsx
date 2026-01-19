@@ -52,9 +52,13 @@ const Login = () => {
             const result = await login(email, password);
             if (result.success) {
                 alert('✅ Login successful!');
-                // Redirect to where they came from, or profile by default
-                const from = location.state?.from?.pathname || '/profile';
-                navigate(from, { replace: true });
+                // Redirect admins to admin dashboard, others to profile
+                if (result.user.isAdmin) {
+                    navigate('/admin', { replace: true });
+                } else {
+                    const from = location.state?.from?.pathname || '/profile';
+                    navigate(from, { replace: true });
+                }
             } else {
                 alert('❌ ' + result.message);
             }

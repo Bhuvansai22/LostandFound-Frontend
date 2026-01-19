@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 
 const Header = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const { isAuthenticated, logout } = useAuth();
+    const { isAuthenticated, logout, currentUser } = useAuth();
 
     return (
         <header>
@@ -25,6 +25,9 @@ const Header = () => {
                         <li><Link to="/found">Found</Link></li>
                         <li><Link to="/report-found">Report Found</Link></li>
                         <li><Link to="/profile">Profile</Link></li>
+                        {currentUser?.isAdmin && (
+                            <li><Link to="/admin" style={{ color: '#ff9800', fontWeight: 'bold' }}>⚙️ Admin</Link></li>
+                        )}
                         <div className="loginid">
                             {isAuthenticated ? (
                                 <button id="login" onClick={logout}>Logout</button>

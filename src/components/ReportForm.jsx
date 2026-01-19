@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 
 const ReportForm = ({ type }) => {
     const isLost = type === 'lost';
@@ -36,7 +37,7 @@ const ReportForm = ({ type }) => {
             payload.name = formData.name; // User name
             payload.title = formData.item; // Item name
 
-            await axios.post(`http://localhost:5000/api/items/${type}`, payload);
+            await axios.post(`${API_URL}/items/${type}`, payload);
             alert('Item reported successfully!');
             // Refresh items or clear form
             setFormData({

@@ -11,7 +11,7 @@ import Profile from './pages/Profile';
 import './index.css';
 
 import Landing from './pages/Landing';
-
+import AdminDashboard from './pages/AdminDashboard';
 import ResetPassword from './pages/ResetPassword';
 
 import ProtectedRoute from './components/ProtectedRoute';
@@ -30,6 +30,7 @@ function App() {
           <Route path="/report-found" element={<ReportFoundPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
         </Routes>
       </Router>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ItemCard from './ItemCard';
+import API_URL from '../config';
 
 const ItemSection = ({ type }) => {
     const [items, setItems] = useState([]);
@@ -9,7 +10,7 @@ const ItemSection = ({ type }) => {
     useEffect(() => {
         const fetchItems = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/items/${type}`);
+                const response = await axios.get(`${API_URL}/items/${type}`);
                 setItems(response.data);
             } catch (error) {
                 console.error(`Error fetching ${type} items:`, error);
